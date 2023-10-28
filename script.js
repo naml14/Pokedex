@@ -41,7 +41,7 @@ function buscarPokes(data) {
                     $newCard.className = "col";
                     $newCard.id = `${pokemones[i].id}${pokemones[i].nombre}`;
                     $newCard.children[0].id = pokemones[i].id;
-                    $newCard.children[0].children[0].src = pokemones[i].imagen.other["official-artwork"].front_default ? pokemones[i].imagen.other["official-artwork"].front_default : placeholder;
+                    $newCard.children[0].children[0].src = (pokemones[i].imagen.other["official-artwork"].front_default != null ? pokemones[i].imagen.other["official-artwork"].front_default : placeholder);
                     $newCard.children[0].children[0].alt = pokemones[i].nombre;
                     $newCard.children[0].children[1].children[0].innerHTML = `N°${pokemones[i].id} ${pokemones[i].nombre}`;
                     let tipos = "";
