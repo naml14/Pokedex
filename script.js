@@ -50,7 +50,7 @@ function buscarPokes(data) {
                     $newCard.children[0].children[1].children[1].innerHTML = tipos;
                     $grid.appendChild($newCard);
                 });
-        }, 500);
+        }, i * 10);
     }
 }
 
