@@ -1,9 +1,3 @@
-//import {asyncFetch} from './func/asyncFetch.mjs';
-//import {crearTarjeta} from './func/crearTarjeta.mjs';
-//import {crearPokemon} from './func/crearPokemon.mjs';
-//import {pokeBuscado} from './func/pokeBuscado.mjs';
-//import {valor} from document;
-//import * as bootstrap from 'https://cdn.jsdelivr.net/npm/bootstrap@5.3/+esm'
 const url = 'https://pokeapi.co/api/v2/pokemon';
 
 const d = document;
@@ -40,15 +34,13 @@ function buscarPokes(data) {
                 .then(data => {
                     const newPokemon = new pokemon(data.id, data.name, data.types, data.sprites, data.height, data.weight, data.abilities);
                     pokemones.push(newPokemon);
-                }/* pokemones.push(crearPokemon(data,pokemon)) */)
+                })
                 .then(() => {
-                    //console.log(pokemones);
                     let $newCard = $card.cloneNode(true);
                     $newCard.className = "col";
                     $newCard.id = `${pokemones[i].id}${pokemones[i].nombre}`;
                     $newCard.children[0].id = pokemones[i].id;
                     $newCard.children[0].children[0].src = pokemones[i].imagen.other["official-artwork"].front_default;
-                    //$newCard.children[0].children[0].src=pokemones[i].imagen.other.dream_world.front_default;
                     $newCard.children[0].children[0].alt = pokemones[i].nombre;
                     $newCard.children[0].children[1].children[0].innerHTML = `N°${pokemones[i].id} ${pokemones[i].nombre}`;
                     let tipos = "";
@@ -57,8 +49,8 @@ function buscarPokes(data) {
                     }
                     $newCard.children[0].children[1].children[1].innerHTML = tipos;
                     $grid.appendChild($newCard);
-                } /* crearTarjeta(pokemones[i],$card,$grid) */);
-        }, i);
+                });
+        }, 500);
     }
 }
 
@@ -88,7 +80,6 @@ $boton.onclick = async () => {
                     peso: ${(element.peso) / 10} Kg<br>
                     habilidades: ${habilidades}<br>`;
             shModal.show();
-            //pokeBuscado(element, $modal);
             err = false;
         }
     })
@@ -106,7 +97,7 @@ async function modificarModal(e) {
     let habilidades = "";
     for (let i = 0; i < pokemones[index].habilidades.length; i++) {
         if (pokemones[index].habilidades[i].is_hidden) {
-            habilidades += `${pokemones[index].habilidades[i].ability.name}(Habilidad Oculta) `;
+            habilidades += `${pokemones[index].habilidades[i].ability.name} (Habilidad Oculta)`;
         } else {
             habilidades += `${pokemones[index].habilidades[i].ability.name} `;
         }
