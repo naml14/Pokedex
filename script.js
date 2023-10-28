@@ -33,7 +33,7 @@ function buscarPokes(data) {
             fetch(urlPoke)
                 .then(response => response.json())
                 .then(data => {
-                    const newPokemon = new pokemon(data.id, data.name, data.types, data.sprites, data.height, data.weight, data.abilities);
+                    const newPokemon = new pokemon(data.id, data.name, data.types, data.sprites.other["official-artwork"].front_default !== null ? data.sprites.other["official-artwork"].front_default : placeholder, data.height, data.weight, data.abilities);
                     pokemones.push(newPokemon);
                 })
                 .then(() => {
@@ -41,7 +41,7 @@ function buscarPokes(data) {
                     $newCard.className = "col";
                     $newCard.id = `${pokemones[i].id}${pokemones[i].nombre}`;
                     $newCard.children[0].id = pokemones[i].id;
-                    $newCard.children[0].children[0].src = (pokemones[i].imagen.other["official-artwork"].front_default != null ? pokemones[i].imagen.other["official-artwork"].front_default : placeholder);
+                    $newCard.children[0].children[0].src = pokemones[i].imagen;
                     $newCard.children[0].children[0].alt = pokemones[i].nombre;
                     $newCard.children[0].children[1].children[0].innerHTML = `N°${pokemones[i].id} ${pokemones[i].nombre}`;
                     let tipos = "";
@@ -75,7 +75,7 @@ $boton.onclick = async () => {
             $modal.children[0].children[0].children[0].children[0].innerHTML = element.nombre;
             $modal.children[0].children[0].children[1].innerHTML = `
                 N°${element.id}
-                <img class="card-img-top g-0" src="${element.imagen.other["official-artwork"].front_default}" alt="${element.nombre}">
+                <img class="card-img-top g-0" src="${element.imagen}" alt="${element.nombre}">
                     tipo: ${tipos}<br>
                     altura: ${(element.altura) / 10} m<br>
                     peso: ${(element.peso) / 10} Kg<br>
@@ -85,7 +85,7 @@ $boton.onclick = async () => {
         }
     })
     if (err) {
-        alert("Error, No se encontrón ningun pokémon con ese nombre");
+        alert("Error, No se encontró ningún pokémon con ese nombre");
     }
 }
 
@@ -106,7 +106,7 @@ async function modificarModal(e) {
     $modal.children[0].children[0].children[0].children[0].innerHTML = pokemones[index].nombre;
     $modal.children[0].children[0].children[1].innerHTML = `
         N°${pokemones[index].id}
-        <img class="card-img-top g-0" src="${pokemones[index].imagen.other["official-artwork"].front_default}" alt="${pokemones[index].nombre}">
+        <img class="card-img-top g-0" src="${pokemones[index].imagen}" alt="${pokemones[index].nombre}">
             tipo: ${tipos}<br>
             altura: ${(pokemones[index].altura) / 10} m<br>
             peso: ${(pokemones[index].peso) / 10} Kg<br>
