@@ -202,36 +202,66 @@ function displayPokemons(pokemonArray) {
 initializeApp();
 
 $boton.onclick = async () => {
-    let err = true;
-    pokemones.forEach(element => {
-        if ($texto.value === element.nombre) {
-            let shModal = new bootstrap.Modal($modal);
+    const pokemonName = $texto.value.trim().toLowerCase();
+
+    if (!pokemonName) {
+        alert("Please enter a Pokémon name to search.");
+        return;
+    }
+
+    const searchUrl = `${url}/${pokemonName}`; // `url` is already 'https://pokeapi.co/api/v2/pokemon'
+
+    try {
+        const response = await fetch(searchUrl);
+        if (response.ok) {
+            const data = await response.json();
+
+            // Create a pokemon object using the class constructor
+            const searchedPokemon = new pokemon(
+                data.id,
+                data.name,
+                data.types,
+                data.sprites.other["official-artwork"].front_default !== null ? data.sprites.other["official-artwork"].front_default : placeholder,
+                data.height,
+                data.weight,
+                data.abilities
+            );
+
+            // Populate and show the modal (adapted from existing modal logic)
             let tipos = "";
-            for (let i = 0; i < element.tipo.length; i++) {
-                tipos += `${element.tipo[i].type.name} `;
+            for (let i = 0; i < searchedPokemon.tipo.length; i++) {
+                tipos += `${searchedPokemon.tipo[i].type.name} `;
             }
             let habilidades = "";
-            for (let i = 0; i < element.habilidades.length; i++) {
-                if (element.habilidades[i].is_hidden) {
-                    habilidades += `${element.habilidades[i].ability.name}(Habilidad Oculta) `;
+            for (let i = 0; i < searchedPokemon.habilidades.length; i++) {
+                if (searchedPokemon.habilidades[i].is_hidden) {
+                    habilidades += `${searchedPokemon.habilidades[i].ability.name}(Habilidad Oculta) `;
                 } else {
-                    habilidades += `${element.habilidades[i].ability.name} `;
+                    habilidades += `${searchedPokemon.habilidades[i].ability.name} `;
                 }
             }
-            $modal.children[0].children[0].children[0].children[0].innerHTML = element.nombre;
+            $modal.children[0].children[0].children[0].children[0].innerHTML = searchedPokemon.nombre; // Modal Title
             $modal.children[0].children[0].children[1].innerHTML = `
-                N°${element.id}
-                <img class="card-img-top g-0" src="${element.imagen}" alt="${element.nombre}">
-                    tipo: ${tipos}<br>
-                    altura: ${(element.altura) / 10} m<br>
-                    peso: ${(element.peso) / 10} Kg<br>
-                    habilidades: ${habilidades}<br>`;
-            shModal.show();
-            err = false;
+                N°${searchedPokemon.id}
+                <img class="card-img-top g-0" src="${searchedPokemon.imagen}" alt="${searchedPokemon.nombre}">
+                    Tipo: ${tipos}<br>
+                    Altura: ${(searchedPokemon.altura) / 10} m<br>
+                    Peso: ${(searchedPokemon.peso) / 10} Kg<br>
+                    Habilidades: ${habilidades}<br>`;
+            
+            let modalInstance = bootstrap.Modal.getInstance($modal);
+            if (!modalInstance) {
+                modalInstance = new bootstrap.Modal($modal);
+            }
+            modalInstance.show();
+
+        } else {
+            // Handle cases like 404 Not Found
+            alert("Error, No se encontró ningún pokémon con ese nombre");
         }
-    })
-    if (err) {
-        alert("Error, No se encontró ningún pokémon con ese nombre");
+    } catch (error) {
+        console.error("Error fetching Pokémon by name:", error);
+        alert("An error occurred while searching for the Pokémon. Please try again.");
     }
 }
 
