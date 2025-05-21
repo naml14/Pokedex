@@ -25,7 +25,7 @@ class pokemon {
 let pokemones = []; // Stores all fetched Pokémon for search functionality
 let totalPokemonCount = 0;
 let currentPage = 1;
-const POKEMON_PER_PAGE = 10;
+const POKEMON_PER_PAGE = 9;
 
 async function fetchPokemonBatch(offset, limit) {
     const pokemonPromises = [];
